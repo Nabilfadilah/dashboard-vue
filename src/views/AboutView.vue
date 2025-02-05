@@ -36,15 +36,18 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(user, index) in filteredUsers" :key="user.id">
-            <td class="border p-2">{{ index + 1 }}.</td>
+          <tr v-for="(user, index) in paginatedData" :key="user.id">
+            <td class="border p-2">{{ (currentPage - 1) * itemsPerPage + index + 1 }}.</td>
             <td class="border p-2">{{ user.name }}</td>
             <td class="border p-2">{{ user.email }}</td>
             <td class="border p-2">{{ user.address }}</td>
             <td class="border p-2">{{ user.phone }}</td>
-            <td class="border p-2">
+            <td class="border p-2 flex gap-2">
+              <router-link :to="`/about/${user.id}/edit`" class="px-3 py-1 bg-yellow-500 text-white rounded-md">Edit</router-link>
               <button @click="deleteUser(user.id)" class="px-3 py-1 bg-red-600 text-white rounded-md">Delete</button>
             </td>
+  
+
           </tr>
         </tbody>
       </table>
@@ -88,15 +91,43 @@ export default {
     return {
       users: [],
       searchQuery: "",
+      filterOption: "", // tambah filterOption
+      itemsPerPage: 5, // tambah itemsPerPage untuk pagination
+      currentPage: 1, // tambah currentPage untuk pagination
     };
   },
   computed: {
     filteredUsers() {
-      return this.users.filter((user) =>
-        user.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
+      let filtered = this.users;
+
+      // filter berdasarkan search query
+      if (this.searchQuery) {
+        filtered = filtered.filter((user) =>
+          user.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+        );
+      }
+
+      // filter berdasarkan dropdown (Admin/User)
+      if (this.filterOption) {
+        filtered = filtered.filter((user) => user.role === this.filterOption);
+      }
+
+      return filtered;
     },
+
+    // pagination table
+    paginatedData() {
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      return this.filteredUsers.slice(start, start + this.itemsPerPage);
+    },
+
+    // menampilkan total data
+    totalPages() {
+      return Math.ceil(this.filteredUsers.length / Number(this.itemsPerPage));
+    },
+
   },
+
   methods: {
     async fetchUsers() {
       try {
@@ -106,10 +137,18 @@ export default {
         console.error("Error fetching users:", error);
       }
     },
+
     async deleteUser(id) {
-      await axios.delete(`http://localhost:5001/api/about/${id}`);
-      this.fetchUsers();
+      if (!confirm("Yakin ingin menghapus?")) return;
+      try {
+        await axios.delete(`http://localhost:5001/api/about/${id}`);
+        this.fetchUsers();
+      } catch (error) {
+        console.error("Error deleting user:", error);
+        alert("Gagal menghapus data.");
+      }
     },
+
     async addData() {
       await axios.post("http://localhost:5001/api/about", {
         name: "New User",
@@ -119,7 +158,21 @@ export default {
       });
       this.fetchUsers();
     },
+
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
+    },
+
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+      }
+    }
+    
   },
+
   mounted() {
     this.fetchUsers();
   },
