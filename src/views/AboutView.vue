@@ -4,7 +4,8 @@
 
     <!-- Header Atas: Add, Search, dan Filter -->
     <div class="flex justify-between items-center mb-4">
-      <button class="px-4 py-2 bg-blue-600 text-white rounded-md">Add</button>
+      <!-- <button class="px-4 py-2 bg-blue-600 text-white rounded-md">Add</button> -->
+      <router-link to="/about/add" class="px-4 py-2 bg-green-600 text-white rounded-md">+ Tambah Data</router-link>
 
       <div class="flex space-x-2">
         <input
@@ -35,15 +36,14 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(user, index) in paginatedData" :key="user.id">
-            <td class="border p-2 text-center">{{ index + 1 }}</td>
+          <tr v-for="(user, index) in filteredUsers" :key="user.id">
+            <td class="border p-2">{{ index + 1 }}.</td>
             <td class="border p-2">{{ user.name }}</td>
             <td class="border p-2">{{ user.email }}</td>
             <td class="border p-2">{{ user.address }}</td>
             <td class="border p-2">{{ user.phone }}</td>
-            <td class="border p-2 flex space-x-2">
-              <button class="px-3 py-1 bg-yellow-500 text-white rounded-md">Edit</button>
-              <button class="px-3 py-1 bg-red-600 text-white rounded-md">Delete</button>
+            <td class="border p-2">
+              <button @click="deleteUser(user.id)" class="px-3 py-1 bg-red-600 text-white rounded-md">Delete</button>
             </td>
           </tr>
         </tbody>
@@ -79,7 +79,72 @@
   </div>
 </template>
 
+
 <script>
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      users: [],
+      searchQuery: "",
+    };
+  },
+  computed: {
+    filteredUsers() {
+      return this.users.filter((user) =>
+        user.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    },
+  },
+  methods: {
+    async fetchUsers() {
+      try {
+        const response = await axios.get("http://localhost:5001/api/about");
+        this.users = response.data;
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    },
+    async deleteUser(id) {
+      await axios.delete(`http://localhost:5001/api/about/${id}`);
+      this.fetchUsers();
+    },
+    async addData() {
+      await axios.post("http://localhost:5001/api/about", {
+        name: "New User",
+        email: "newuser@example.com",
+        address: "Somewhere",
+        phone: "08123456789",
+      });
+      this.fetchUsers();
+    },
+  },
+  mounted() {
+    this.fetchUsers();
+  },
+};
+</script>
+
+<style scoped>
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+</style>
+
+
+<!-- <script>
 export default {
   data() {
     return {
@@ -137,21 +202,4 @@ export default {
     },
   },
 };
-</script>
-
-<style scoped>
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: left;
-}
-
-th {
-  background-color: #f4f4f4;
-}
-</style>
+</script> -->
