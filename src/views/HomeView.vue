@@ -89,7 +89,7 @@
       </header>
 
       <!-- Content -->
-      <main class="flex-1 bg-gray-100 p-6">
+      <main class="flex-1 bg-gray-100">
         <router-view></router-view>
       </main>
     </div>
