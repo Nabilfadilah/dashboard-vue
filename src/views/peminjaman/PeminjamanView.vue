@@ -144,6 +144,17 @@ export default {
             }
         },
 
+        async deleteUser(id) {
+            if (!confirm("Yakin ingin menghapus?")) return;
+            try {
+                await axios.delete(`http://localhost:5001/api/loan/${id}`);
+                this.fetchUsers();
+            } catch (error) {
+                console.error("Error deleting user:", error);
+                alert("Gagal menghapus data.");
+            }
+        },
+
         formatDate(dateString) {
             if (!dateString) return "-"; // Jika tanggal kosong
             const options = { day: "2-digit", month: "2-digit", year: "numeric" };
