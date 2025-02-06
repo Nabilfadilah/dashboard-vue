@@ -4,6 +4,7 @@ import ProfileView from '@/views/ProfileView.vue'
 import AboutView from '@/views/AboutView.vue'
 import AddAbout from '@/views/AddAbout.vue'
 import EditAbout from '@/views/EditAbout.vue'
+import PeminjamanView from '@/views/peminjaman/PeminjamanView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +33,11 @@ const router = createRouter({
           path: '/about/:id/edit',
           name: 'edit-about',
           component: EditAbout
+        },
+        {
+          path: '/loan',
+          name: 'loan',
+          component: PeminjamanView,
         },
       ]
     },
