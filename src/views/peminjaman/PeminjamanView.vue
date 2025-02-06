@@ -48,7 +48,7 @@
             <td class="border p-2">{{ formatRupiah(user.total_paid) }}</td>
             <td class="border p-2">{{ user.image }}</td>
             <td class="border p-2 flex gap-2">
-              <router-link :to="`/about/${user.id}/edit`" class="px-3 py-1 bg-yellow-500 text-white rounded-md">Edit</router-link>
+              <router-link :to="`/loan/${user.id}/edit`" class="px-3 py-1 bg-yellow-500 text-white rounded-md">Edit</router-link>
               <button @click="deleteUser(user.id)" class="px-3 py-1 bg-red-600 text-white rounded-md">Delete</button>
             </td>
           </tr>
@@ -156,20 +156,20 @@ export default {
                 style: "currency",
                 currency: "IDR"
             }).format(angka);
-        }
+        },
+
+        prevPage() {
+            if (this.currentPage > 1) {
+                this.currentPage--;
+            }
+        },
+
+        nextPage() {
+            if (this.currentPage < this.totalPages) {
+                this.currentPage++;
+            }
+        },
         
-    },
-
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-      }
-    },
-
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
-      }
     },
 
     mounted() {
