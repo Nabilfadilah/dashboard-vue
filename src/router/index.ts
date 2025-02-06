@@ -5,6 +5,8 @@ import AboutView from '@/views/AboutView.vue'
 import AddAbout from '@/views/AddAbout.vue'
 import EditAbout from '@/views/EditAbout.vue'
 import PeminjamanView from '@/views/peminjaman/PeminjamanView.vue'
+import AddPeminjaman from '@/views/peminjaman/AddPeminjaman.vue'
+import EditPeminjaman from '@/views/peminjaman/EditPeminjaman.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +41,12 @@ const router = createRouter({
           name: 'loan',
           component: PeminjamanView,
         },
+        {
+          path: '/loan/add',
+          name: 'add-loan',
+          component: AddPeminjaman
+        },
+
       ]
     },
   ],
