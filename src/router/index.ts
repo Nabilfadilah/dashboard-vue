@@ -46,7 +46,11 @@ const router = createRouter({
           name: 'add-loan',
           component: AddPeminjaman
         },
-
+        {
+          path: '/loan/:id/edit',
+          name: 'edit-loan',
+          component: EditPeminjaman
+        },
       ]
     },
   ],
