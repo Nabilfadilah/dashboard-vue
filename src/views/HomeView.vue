@@ -134,7 +134,7 @@ export default {
         { name: "Home", path: "/", icon: "home" },
         { name: "About", path: "/about", icon: "info-circle" },
         { name: "Profile", path: "/profile", icon: "user" },
-        { name: "Message", path: "/message", icon: "envelope" },
+        { name: "Peminjaman", path: "/loan", icon: "envelope" },
         { name: "Download", path: "/download", icon: "download" },
       ],
     };
