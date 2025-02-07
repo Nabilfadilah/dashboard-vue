@@ -46,7 +46,17 @@
             <td class="border p-2">{{ formatDate(user.loan_date) }}</td>
             <td class="border p-2">{{ formatDate(user.loan_end_date) }}</td>
             <td class="border p-2">{{ formatRupiah(user.total_paid) }}</td>
-            <td class="border p-2">{{ user.image }}</td>
+            
+            <td class="border p-2">
+              <img
+                v-if="user.image"
+                :src="`http://localhost:5001/uploads/${user.image}`"
+                alt="Image"
+                class="w-12 h-12 object-cover"
+              />
+              <span v-else>No Image</span>
+            </td>
+
             <td class="border p-2 flex gap-2">
               <router-link :to="`/loan/${user.id}/edit`" class="px-3 py-1 bg-yellow-500 text-white rounded-md">Edit</router-link>
               <button @click="deleteUser(user.id)" class="px-3 py-1 bg-red-600 text-white rounded-md">Delete</button>
