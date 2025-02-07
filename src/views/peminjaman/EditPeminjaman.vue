@@ -2,24 +2,27 @@
     <div class="max-w-4xl mx-auto mt-2 p-6 bg-white shadow-lg rounded-lg">
         <h1 class="text-2xl font-bold mb-4 text-center">Edit Data Peminjaman</h1>
 
-        <form @submit.prevent="updateData">
+        <form @submit.prevent="updateData" enctype="multipart/form-data">
             <div class="grid grid-cols-2 gap-4">
                 <!-- Nama -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Nama</label>
-                    <input v-model="name" type="text" required class="mt-1 p-2 w-full border rounded-md" placeholder="Masukan nama" />
+                    <input v-model="name" type="text" required class="mt-1 p-2 w-full border rounded-md"
+                        placeholder="Masukan nama" />
                 </div>
 
                 <!-- Email -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Email</label>
-                    <input v-model="email" type="email" required class="mt-1 p-2 w-full border rounded-md" placeholder="Masukan email" />
+                    <input v-model="email" type="email" required class="mt-1 p-2 w-full border rounded-md"
+                        placeholder="Masukan email" />
                 </div>
 
                 <!-- Alamat (Lebar penuh) -->
                 <div class="col-span-2">
                     <label class="block text-sm font-medium text-gray-700">Alamat</label>
-                    <textarea v-model="address" required class="mt-1 p-2 w-full border rounded-md" placeholder="Masukan alamat"></textarea>
+                    <textarea v-model="address" required class="mt-1 p-2 w-full border rounded-md"
+                        placeholder="Masukan alamat"></textarea>
                 </div>
 
                 <!-- No Telepon -->
@@ -32,7 +35,8 @@
                 <!-- Tipe Motor -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Tipe Motor</label>
-                    <input v-model="type_motor" type="text" required class="mt-1 p-2 w-full border rounded-md" placeholder="Masukan tipe motor" />
+                    <input v-model="type_motor" type="text" required class="mt-1 p-2 w-full border rounded-md"
+                        placeholder="Masukan tipe motor" />
                 </div>
 
                 <!-- Tanggal Peminjaman -->
@@ -50,20 +54,28 @@
                 <!-- Total Pembayaran (Format Rupiah) -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Total Bayar</label>
-                    <input v-model="total_paid" type="text" required
-                        class="mt-1 p-2 w-full border rounded-md" placeholder="Rp." />
+                    <input v-model="total_paid" type="text" required class="mt-1 p-2 w-full border rounded-md"
+                        placeholder="Rp." />
                 </div>
 
                 <!-- Image -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">Image</label>
-                    <input type="file" @change="handleFileUpload" class="mt-1 p-2 w-full border rounded-md" />
+                <!-- Tampilkan preview gambar jika ada -->
+                <div class="mb-4" v-if="currentImage">
+                    <label class="block text-sm font-medium text-gray-700">Current Image</label>
+                    <img :src="`http://localhost:5001/uploads/${currentImage}`" alt="Current Image"
+                        class="w-32 h-32 object-cover" />
+                </div>
+                <!-- Input file untuk mengganti gambar -->
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Ubah Image (opsional)</label>
+                    <input type="file" @change="onFileChange" accept="image/*" class="mt-1" />
                 </div>
             </div>
 
             <!-- Button -->
             <div class="flex justify-between mt-6">
-                <router-link to="/loan" class="px-4 py-2 bg-gray-500 text-white rounded-md text-sm">Kembali</router-link>
+                <router-link to="/loan"
+                    class="px-4 py-2 bg-gray-500 text-white rounded-md text-sm">Kembali</router-link>
                 <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md text-sm">Simpan</button>
             </div>
         </form>
@@ -85,7 +97,8 @@ export default {
             loan_date: new Date().toISOString().split("T")[0], // Format YYYY-MM-DD
             loan_end_date: new Date().toISOString().split("T")[0], // Format YYYY-MM-DD
             total_paid: 0,
-            image: ""
+            currentImage: null, // Nama file gambar yang sudah tersimpan
+            selectedImage: null, // File baru (jika diganti)
         };
     },
 
@@ -106,35 +119,45 @@ export default {
             this.loan_end_date = data.loan_end_date ? data.loan_end_date.split("T")[0] : "";
 
             this.total_paid = data.total_paid;
-            this.image = data.image;
+            this.currentImage = data.image; // Asumsikan kolom image menyimpan nama file
         } catch (error) {
             console.error("Error fetching data:", error);
         }
     },
 
     methods: {
+        onFileChange(e) {
+            const file = e.target.files[0];
+            this.selectedImage = file;
+        },
+
         async updateData() {
+            const formData = new FormData();
+
+            formData.append("name", this.name);
+            formData.append("email", this.email);
+            formData.append("address", this.address);
+            formData.append("phone", this.phone);
+            formData.append("type_motor", this.type_motor);
+            formData.append("loan_date", this.loan_date);
+            formData.append("loan_end_date", this.loan_end_date);
+            formData.append("total_paid", this.total_paid);
+            // Jika ada file baru, masukkan ke formData
+            if (this.selectedImage) {
+                formData.append("image", this.selectedImage);
+            }
+
             try {
-                await axios.put(`http://localhost:5001/api/loan/${this.id}`, {
-                    name: this.name,
-                    email: this.email,
-                    address: this.address,
-                    phone: this.phone,
-                    type_motor: this.type_motor,
-                    loan_date: this.loan_date,
-                    loan_end_date: this.loan_end_date,
-                    total_paid: this.total_paid,
-                    image: this.image
+                await axios.put(`http://localhost:5001/api/loan/${this.id}`, formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
                 });
                 this.$router.push("/loan"); // Redirect ke halaman loan setelah sukses
             } catch (error) {
                 console.error("Error updating data:", error);
             }
-        }, 
+        },
     }
 }
 </script>
 
-<style>
-
-</style>
+<style></style>
