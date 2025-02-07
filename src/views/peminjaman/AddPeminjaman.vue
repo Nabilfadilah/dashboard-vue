@@ -2,7 +2,7 @@
     <div class="max-w-4xl mx-auto mt-2 p-6 bg-white shadow-lg rounded-lg">
         <h1 class="text-2xl font-bold mb-4 text-center">Tambah Data Peminjaman</h1>
 
-        <form @submit.prevent="addData">
+        <form @submit.prevent="addData" enctype="multipart/form-data">
             <div class="grid grid-cols-2 gap-4">
                 <!-- Nama -->
                 <div>
@@ -57,7 +57,7 @@
                 <!-- Image -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700">Image</label>
-                    <input type="file" @change="handleFileUpload" class="mt-1 p-2 w-full border rounded-md" />
+                    <input type="file" @change="onFileChange"  accept="image/*" class="mt-1 p-2 w-full border rounded-md" />
                 </div>
             </div>
 
@@ -84,23 +84,33 @@ export default {
             loan_date: new Date().toISOString(),
             loan_end_date: new Date().toISOString(),
             total_paid: 0,
-            image: ""
+            selectedImage: null
         }
     },
 
     methods: {
+        onFileChange(e) {
+            const file = e.target.files[0];
+            this.selectedImage = file;
+        },
+
         async addData() {
+            const formData = new FormData();
+            formData.append("name", this.name);
+            formData.append("email", this.email);
+            formData.append("address", this.address);
+            formData.append("phone", this.phone);
+            formData.append("type_motor", this.type_motor);
+            formData.append("loan_date", this.loan_date);
+            formData.append("loan_end_date", this.loan_end_date);
+            formData.append("total_paid", this.total_paid);
+            if (this.selectedImage) {
+                formData.append("image", this.selectedImage);
+            }
+
             try {
-                await axios.post("http://localhost:5001/api/loan", {
-                    name: this.name,
-                    email: this.email,
-                    address: this.address,
-                    phone: this.phone,
-                    type_motor: this.type_motor,
-                    loan_date: this.loan_date,
-                    loan_end_date: this.loan_end_date,
-                    total_paid: this.total_paid,
-                    image: this.image
+                await axios.post("http://localhost:5001/api/loan", formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
                 });
                 this.$router.push("/loan"); // Redirect ke halaman loan setelah sukses
             } catch (error) {
