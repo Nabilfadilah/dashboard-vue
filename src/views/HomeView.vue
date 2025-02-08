@@ -81,9 +81,9 @@
             <router-link to="/profile" class="block px-4 py-2 hover:bg-gray-200"
               >Profile</router-link
             >
-            <router-link to="/logout" class="block px-4 py-2 hover:bg-gray-200"
-              >Logout</router-link
-            >
+            <button @click="logout" class="px-4 py-2 bg-red-600 rounded-md hover:bg-red-700 transition">
+              Logout
+            </button>
           </div>
         </div>
       </header>
@@ -123,9 +123,12 @@ library.add(
 );
 
 export default {
+  name: "Header",
+  
   components: {
     FontAwesomeIcon,
   },
+  
   data() {
     return {
       sidebarOpen: true,
@@ -145,6 +148,13 @@ export default {
     },
     toggleDropdown() {
       this.dropdownOpen = !this.dropdownOpen;
+    },
+
+    logout() {
+      // Hapus token dari localStorage
+      localStorage.removeItem("token");
+      // Redirect ke halaman login
+      this.$router.push("/login");
     },
   },
 };
