@@ -3,51 +3,35 @@
     <!-- Sidebar -->
     <div
       :class="[
-        'h-full bg-gray-800 text-white transition-all duration-300',
-        sidebarOpen ? 'w-64 fixed md:relative' : 'w-16 md:relative',
-        sidebarOpen ? 'left-0' : '-left-64 md:left-0',
+        'h-full bg-gray-800 text-white transition-all duration-300 fixed md:relative z-50 w-16',
       ]"
     >
       <!-- Logo dan Title -->
-      <div class="h-16 bg-gray-900 flex items-center px-4">
-        <h3 v-if="sidebarOpen" class="font-bold text-lg">Admin Dashboard</h3>
+      <div class="h-16 bg-gray-900 flex items-center justify-center">
+        <h3 class="font-bold text-lg">A</h3> <!-- Bisa ganti jadi ikon -->
       </div>
 
       <!-- Menu -->
-      <nav class="py-4 px-4">
-        <ul class="space-y-4">
-          <li v-for="item in menuItems" :key="item.name">
+      <nav class="py-4 px-2">
+        <ul class="space-y-2">
+          <li v-for="item in menuItems" :key="item.name" class="group relative">
             <router-link
               :to="item.path"
-              class="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-700 transition"
+              class="flex items-center justify-center p-3 rounded-md hover:bg-gray-700 transition"
+              active-class="bg-gray-900 text-white font-bold"
             >
-              <font-awesome-icon :icon="item.icon" class="w-5 h-5" />
-              <span v-if="sidebarOpen" class="uppercase">{{ item.name }}</span>
+              <font-awesome-icon :icon="item.icon" class="w-4 h-4" />
             </router-link>
           </li>
         </ul>
       </nav>
-
-      <!-- Settings -->
-      <div class="absolute bottom-4 left-4">
-        <router-link
-          to="/settings"
-          class="flex items-center space-x-3 p-2 hover:bg-gray-700 transition"
-        >
-          <font-awesome-icon icon="cog" class="w-5 h-5" />
-          <span v-if="sidebarOpen">Settings</span>
-        </router-link>
-      </div>
     </div>
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col">
+    <div class="flex-1 flex flex-col md:ml-0" :class="{ 'ml-64': sidebarOpen }">
       <!-- Header -->
-      <header
-        class="h-16 bg-gray-900 text-white flex items-center px-4 shadow-md"
-      >
+      <header class="h-16 bg-gray-900 text-white flex items-center px-4 shadow-md fixed w-full md:w-auto md:relative z-40">
         <!-- Hamburger Menu -->
-        <!-- Pastikan tombol bisa berfungsi di layar kecil -->
         <button
           @click="toggleSidebar"
           class="text-white focus:outline-none md:hidden"
@@ -66,22 +50,14 @@
 
         <!-- User Dropdown -->
         <div class="relative">
-          <button
-            @click="toggleDropdown"
-            class="focus:outline-none flex items-center space-x-2"
-          >
+          <button @click="toggleDropdown" class="focus:outline-none flex items-center space-x-2">
             <font-awesome-icon icon="user-circle" class="w-6 h-6" />
             <span v-if="dropdownOpen">▼</span>
           </button>
 
-          <div
-            v-if="dropdownOpen"
-            class="absolute right-0 mt-2 w-40 bg-white text-black rounded-md shadow-md"
-          >
-            <router-link to="/profile" class="block px-4 py-2 hover:bg-gray-200"
-              >Profile</router-link
-            >
-            <button @click="logout" class="px-4 py-2 bg-red-600 rounded-md hover:bg-red-700 transition">
+          <div v-if="dropdownOpen" class="absolute right-0 mt-2 w-40 bg-white text-black rounded-md shadow-md">
+            <router-link to="/profile" class="block px-4 py-2 hover:bg-gray-200">Profile</router-link>
+            <button @click="logout" class="w-full px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition">
               Logout
             </button>
           </div>
@@ -106,39 +82,24 @@ import {
   faInfoCircle,
   faUser,
   faEnvelope,
-  faDownload,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-// Tambahkan ikon ke library
-library.add(
-  faBars,
-  faUserCircle,
-  faCog,
-  faHome,
-  faInfoCircle,
-  faUser,
-  faEnvelope,
-  faDownload
-);
+library.add(faBars, faUserCircle, faCog, faHome, faInfoCircle, faUser, faEnvelope);
 
 export default {
-  name: "Header",
-  
+  name: "HomeView",
   components: {
     FontAwesomeIcon,
   },
-  
   data() {
     return {
-      sidebarOpen: true,
+      sidebarOpen: window.innerWidth >= 768, // Buka sidebar di layar besar
       dropdownOpen: false,
       menuItems: [
-        { name: "Home", path: "/", icon: "home" },
-        { name: "About", path: "/about", icon: "info-circle" },
-        { name: "Profile", path: "/profile", icon: "user" },
-        { name: "Peminjaman", path: "/loan", icon: "envelope" },
-        { name: "Download", path: "/download", icon: "download" },
+        { name: "", path: "/about", icon: "info-circle" },
+        { name: "", path: "/profile", icon: "user" },
+        { name: "", path: "/loan", icon: "envelope" },
       ],
     };
   },
@@ -149,16 +110,35 @@ export default {
     toggleDropdown() {
       this.dropdownOpen = !this.dropdownOpen;
     },
-
     logout() {
-      // Hapus token dari localStorage
       localStorage.removeItem("token");
-      // Redirect ke halaman login
       this.$router.push("/login");
+    },
+  },
+  mounted() {
+    window.addEventListener("resize", this.handleResize);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.handleResize);
+  },
+  methods: {
+    toggleSidebar() {
+      this.sidebarOpen = !this.sidebarOpen;
+    },
+    toggleDropdown() {
+      this.dropdownOpen = !this.dropdownOpen;
+    },
+    logout() {
+      localStorage.removeItem("token");
+      this.$router.push("/login");
+    },
+    handleResize() {
+      this.sidebarOpen = window.innerWidth >= 768;
     },
   },
 };
 </script>
+
 
 <style>
 /* Animasi Sidebar */
