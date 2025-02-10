@@ -5,7 +5,7 @@
         <!-- Header Atas: Add, Search, dan Filter -->
         <div class="flex justify-between items-center mb-4">
             <!-- <button class="px-4 py-2 bg-blue-600 text-white rounded-md">Add</button> -->
-            <router-link to="/about/add" class="px-4 py-2 bg-green-600 text-white rounded-md text-sm">+ Tambah
+            <router-link to="/setting/add" class="px-4 py-2 bg-green-600 text-white rounded-md text-sm">+ Tambah
                 Data</router-link>
 
             <div class="flex space-x-2">
