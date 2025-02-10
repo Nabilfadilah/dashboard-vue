@@ -11,6 +11,9 @@ import LoginView from '@/views/LoginView.vue'
 import MotorView from '@/views/motor/MotorView.vue'
 import AddMotor from '@/views/motor/AddMotor.vue'
 import EditMotor from '@/views/motor/EditMotor.vue'
+import PengaturanView from '@/views/pengaturan/PengaturanView.vue'
+import AddPengaturan from '@/views/pengaturan/AddPengaturan.vue'
+import EditPengaturan from '@/views/pengaturan/EditPengaturan.vue'
 
 const routes = [
   {
@@ -23,12 +26,15 @@ const routes = [
     component: HomeView,
     meta: { requiresAuth: true }, // Semua child route di sini memerlukan otentikasi
     children: [
+      // profile
       { path: '', redirect: '/loan' }, // Redirect default ke /about
       {
         path: 'profile',
         name: 'profile',
         component: ProfileView,
       },
+
+      // about
       {
         path: 'about',
         name: 'about',
@@ -44,6 +50,8 @@ const routes = [
         name: 'edit-about',
         component: EditAbout,
       },
+
+      // peminjaman
       {
         path: 'loan',
         name: 'loan',
@@ -59,6 +67,8 @@ const routes = [
         name: 'edit-loan',
         component: EditPeminjaman,
       },
+
+      // motor
       {
         path: 'motor',
         name: 'motor',
@@ -73,6 +83,23 @@ const routes = [
         path: 'motor/:id/edit',
         name: 'edit-motor',
         component: EditMotor,
+      },
+
+      // setting
+      {
+        path: 'setting',
+        name: 'setting',
+        component: PengaturanView,
+      },
+      {
+        path: 'setting/add',
+        name: 'add-setting',
+        component: AddPengaturan,
+      },
+      {
+        path: 'setting/:id/edit',
+        name: 'edit-setting',
+        component: EditPengaturan,
       },
     ]
   },
