@@ -36,11 +36,11 @@
                         <td class="border p-2">{{ user.year }}</td>
                         <td class="border p-2">{{ user.plat_nomor }}</td>
                         <td class="border p-2">{{ user.status }}</td>
-                        
+
 
                         <td class="border p-2">
-                            <img v-if="user.image" :src="`http://localhost:5001/uploads/motor/${user.image}`" alt="Image"
-                                class="w-12 h-12 object-cover" />
+                            <img v-if="user.image" :src="`http://localhost:5001/uploads/motor/${user.image}`"
+                                alt="Image" class="w-12 h-12 object-cover" />
                             <span v-else>No Image</span>
                         </td>
 
@@ -138,6 +138,17 @@ export default {
                 this.users = response.data;
             } catch (error) {
                 console.error("Error fetching users:", error);
+            }
+        },
+
+        async deleteUser(id) {
+            if (!confirm("Yakin ingin menghapus?")) return;
+            try {
+                await axios.delete(`http://localhost:5001/api/motor/${id}`);
+                this.fetchUsers();
+            } catch (error) {
+                console.error("Error deleting user:", error);
+                alert("Gagal menghapus data.");
             }
         },
 
