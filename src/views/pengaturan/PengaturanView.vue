@@ -36,8 +36,8 @@
                         <td class="border p-2">{{ user.contact_admin }}</td>
                         <td class="border p-2">{{ user.address_rental }}</td>
                         <td class="border p-2 flex gap-2">
-                            <router-link :to="`/about/${user.id}/edit`"
-                                class="px-3 py-1 bg-yellow-500 text-white rounded-md">Edit</router-link>
+                            <!-- <router-link :to="`/about/${user.id}/edit`"
+                                class="px-3 py-1 bg-yellow-500 text-white rounded-md">Edit</router-link> -->
                             <button @click="deleteUser(user.id)"
                                 class="px-3 py-1 bg-red-600 text-white rounded-md">Delete</button>
                         </td>
@@ -124,6 +124,17 @@ export default {
             }
         },
 
+        async deleteUser(id) {
+            if (!confirm("Yakin ingin menghapus?")) return;
+            try {
+                await axios.delete(`http://localhost:5001/api/setting/${id}`);
+                this.fetchUsers();
+            } catch (error) {
+                console.error("Error deleting user:", error);
+                alert("Gagal menghapus data.");
+            }
+        },
+
         prevPage() {
             if (this.currentPage > 1) {
                 this.currentPage--;
@@ -145,17 +156,18 @@ export default {
 
 <style scoped>
 table {
-  width: 100%;
-  border-collapse: collapse;
+    width: 100%;
+    border-collapse: collapse;
 }
 
-th, td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: left;
+th,
+td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
 }
 
 th {
-  background-color: #f4f4f4;
+    background-color: #f4f4f4;
 }
 </style>
