@@ -97,8 +97,12 @@ export default {
     },
 
     computed: {
+        sortedUsers() {
+            return [...this.users].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+        },
+
         filteredUsers() {
-            let filtered = this.users;
+            let filtered = this.sortedUsers; // Gunakan data yang sudah diurutkan
 
             // filter berdasarkan search query
             if (this.searchQuery) {
