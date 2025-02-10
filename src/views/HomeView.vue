@@ -82,10 +82,12 @@ import {
   faInfoCircle,
   faUser,
   faEnvelope,
+  faGear,
+  faMotorcycle
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-library.add(faBars, faUserCircle, faCog, faHome, faInfoCircle, faUser, faEnvelope);
+library.add(faBars, faUserCircle, faCog, faHome, faInfoCircle, faUser, faEnvelope, faGear, faMotorcycle);
 
 export default {
   name: "HomeView",
@@ -97,9 +99,10 @@ export default {
       sidebarOpen: window.innerWidth >= 768, // Buka sidebar di layar besar
       dropdownOpen: false,
       menuItems: [
-        { name: "", path: "/about", icon: "info-circle" },
-        { name: "", path: "/profile", icon: "user" },
         { name: "", path: "/loan", icon: "envelope" },
+        { name: "", path: "/motor", icon: "motorcycle" },
+        { name: "", path: "/setting", icon: "gear" },
+        { name: "", path: "/about", icon: "info-circle" },
       ],
     };
   },
