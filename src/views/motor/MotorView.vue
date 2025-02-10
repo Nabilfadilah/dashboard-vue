@@ -45,7 +45,7 @@
                         </td>
 
                         <td class="border p-2 flex gap-2">
-                            <router-link :to="`/loan/${user.id}/edit`"
+                            <router-link :to="`/motor/${user.id}/edit`"
                                 class="px-3 py-1 bg-yellow-500 text-white rounded-md">Edit</router-link>
                             <button @click="deleteUser(user.id)"
                                 class="px-3 py-1 bg-red-600 text-white rounded-md">Delete</button>
