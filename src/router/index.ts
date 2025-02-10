@@ -8,6 +8,9 @@ import PeminjamanView from '@/views/peminjaman/PeminjamanView.vue'
 import AddPeminjaman from '@/views/peminjaman/AddPeminjaman.vue'
 import EditPeminjaman from '@/views/peminjaman/EditPeminjaman.vue'
 import LoginView from '@/views/LoginView.vue'
+import MotorView from '@/views/motor/MotorView.vue'
+import AddMotor from '@/views/motor/AddMotor.vue'
+import EditMotor from '@/views/motor/EditMotor.vue'
 
 const routes = [
   {
@@ -20,7 +23,7 @@ const routes = [
     component: HomeView,
     meta: { requiresAuth: true }, // Semua child route di sini memerlukan otentikasi
     children: [
-      { path: '', redirect: '/about' }, // Redirect default ke /about
+      { path: '', redirect: '/loan' }, // Redirect default ke /about
       {
         path: 'profile',
         name: 'profile',
@@ -55,6 +58,21 @@ const routes = [
         path: 'loan/:id/edit',
         name: 'edit-loan',
         component: EditPeminjaman,
+      },
+      {
+        path: 'motor',
+        name: 'motor',
+        component: MotorView,
+      },
+      {
+        path: 'motor/add',
+        name: 'add-motor',
+        component: AddMotor,
+      },
+      {
+        path: 'motor/:id/edit',
+        name: 'edit-motor',
+        component: EditMotor,
       },
     ]
   },
