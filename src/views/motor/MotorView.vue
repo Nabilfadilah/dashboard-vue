@@ -4,7 +4,7 @@
 
         <!-- Header Atas: Add, Search, dan Filter -->
         <div class="flex justify-between items-center mb-4">
-            <router-link to="/loan/add" class="px-4 py-2 bg-green-600 text-white rounded-md text-sm">+ Tambah
+            <router-link to="/motor/add" class="px-4 py-2 bg-green-600 text-white rounded-md text-sm">+ Tambah
                 Data</router-link>
 
             <div class="flex space-x-2">
